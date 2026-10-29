@@ -1,0 +1,33 @@
+name: Enxerto (bootloader)
+
+on:
+  workflow_dispatch:
+    inputs:
+      board:
+        description: sweet / beryllium / miatoll
+        default: miatoll
+
+jobs:
+  enxerto:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+      - name: Packages
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -yq gcc-aarch64-linux-gnu binutils-aarch64-linux-gnu android-sdk-libsparse-utils mkbootimg python3 cpio gzip
+      - name: Build
+        run: |
+          # the stock DTB of a phone stays off the repository: a stand-in is enough to build the image, which is
+          # wrapped around the real one on the computer that boots the phone (tools/renegade/mkboot-full.sh)
+          mkdir -p dtb/${{ inputs.board }}
+          printf '\xd0\x0d\xfe\xed\x00\x00\x00\x28\x00\x00\x00\x28\x00\x00\x00\x28\x00\x00\x00\x28\x00\x00\x00\x11\x00\x00\x00\x10\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00' > dtb/${{ inputs.board }}/dtb
+          cd enxerto
+          BOARD=${{ inputs.board }} DTB=../dtb/${{ inputs.board }}/dtb ./build.sh 2>&1 | tail -40
+          ls -la out
+      - uses: actions/upload-artifact@v5
+        with:
+          name: enxerto-${{ inputs.board }}
+          path: |
+            enxerto/out/Image
+            enxerto/out/enxerto.elf
