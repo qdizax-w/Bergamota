@@ -12,6 +12,13 @@
 #define FB_H			2246
 /* sdm845 imem@146bf000, restart_reason@65c */
 #define IMEM_RESTART_REASON	0x146bf65cUL
+#elif defined(BOARD_MIATOLL)
+#define BOARD_NAME		"miatoll"
+/* cont_splash_region@9c000000 and qcom,msm-imem@146aa000 as on sweet (SM7125 is the same family) */
+#define FB_BASE			0x9c000000UL
+#define FB_W			1080
+#define FB_H			2400
+#define IMEM_RESTART_REASON	0x146aa65cUL
 #else
 #define BOARD_NAME		"sweet"
 /* reserved-memory cont_splash_region@9c000000 */

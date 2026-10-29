@@ -46,6 +46,14 @@ BOARDS = {
         compat=['xiaomi,sweet', 'qcom,sm7150'],
         # 0-5 Cortex-A55, 6-7 Cortex-A76
         cpu_compat='qcom,kryo470', big_from=6, freqs=(1804800000, 2304000000)),
+    # Redmi Note 9S / 9 Pro / Note 10 Lite / POCO M2 Pro (SM7125, "atoll"): the same SoC family and memory map as
+    # sweet (cont_splash_region@9c000000, qcom,msm-imem@146aa000, 0-5 Cortex-A55 and 6-7 Cortex-A76, the same GIC and UFS);
+    # 'xiaomi,sweet' stays in the list: SweetPlatformExpert matches it. A LCD with a WLED backlight (the PM6150L's) where
+    # sweet has an AMOLED, and a FocalTech FT8756 touch controller.
+    'miatoll': dict(
+        fb=(0x9c000000, 0x1700000), fb_wh=(1080, 2400),
+        compat=['xiaomi,miatoll', 'xiaomi,sweet', 'qcom,sm7125'],
+        cpu_compat='qcom,kryo470', big_from=6, freqs=(1804800000, 2304000000)),
     'beryllium': dict(
         # cont_splash_mem@9d400000, simple-framebuffer 1080x2246 (mainline beryllium-common)
         fb=(0x9d400000, 0x2400000), fb_wh=(1080, 2246),
@@ -158,7 +166,7 @@ def build(seed=None, qemu=False, highmem=False, board='sweet', display_scale=3, 
     """qemu=True: same tree, but with QEMU virt's GIC addresses and CNTFRQ (tools/qemu-sweet.py)."""
     b = BOARDS[board]
     phys_base, mem_size = (HIGH_PHYS_BASE, HIGH_MEM_SIZE) if highmem else (PHYS_BASE, MEM_SIZE)
-    if board != 'sweet' and not qemu:
+    if board not in ('sweet', 'miatoll') and not qemu:
         if not highmem:
             phys_base, mem_size = b['mem']
     fb, fb_size = b['fb']

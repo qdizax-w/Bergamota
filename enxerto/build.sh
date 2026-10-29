@@ -29,6 +29,7 @@ CFLAGS="-O2 -ffreestanding -nostdlib -fno-pic -mgeneral-regs-only -mstrict-align
 case $BOARD in
 sweet)		DTB=${DTB:-../dtb/boot_unpacked/dtb} ;;
 beryllium)	DTB=${DTB:-../dtb/beryllium/dtb}; CFLAGS="$CFLAGS -DBOARD_BERYLLIUM" ;;
+miatoll)	DTB=${DTB:-../dtb/miatoll/dtb}; CFLAGS="$CFLAGS -DBOARD_MIATOLL" ;;
 *)		echo "error: unknown BOARD=$BOARD" >&2; exit 1 ;;
 esac
 [ -f "$DTB" ] || { echo "error: $DTB missing (stock DTB of the phone, see README)" >&2; exit 1; }
