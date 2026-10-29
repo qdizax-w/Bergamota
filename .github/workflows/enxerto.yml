@@ -23,7 +23,7 @@ jobs:
           mkdir -p dtb/${{ inputs.board }}
           printf '\xd0\x0d\xfe\xed\x00\x00\x00\x28\x00\x00\x00\x28\x00\x00\x00\x28\x00\x00\x00\x28\x00\x00\x00\x11\x00\x00\x00\x10\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00' > dtb/${{ inputs.board }}/dtb
           cd enxerto
-          BOARD=${{ inputs.board }} DTB=../dtb/${{ inputs.board }}/dtb ./build.sh 2>&1 | tail -40
+          BOOTLOG=1 BOARD=${{ inputs.board }} DTB=../dtb/${{ inputs.board }}/dtb ./build.sh 2>&1 | tail -40
           ls -la out
       - uses: actions/upload-artifact@v5
         with:

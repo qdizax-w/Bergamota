@@ -396,7 +396,16 @@ void enxerto_main(uint64_t dtb)
 
 	/* Cold power-on: ABL leaves USB off unless it entered fastboot. No-op when already alive. */
 	stage = "usb power";
+#ifndef BOARD_MIATOLL
 	usb_power_up();
+#else
+	/*
+	 * usb_power.c has the SDM845's clock offsets (gcc-sdm845.c): on the SM7125 they are other registers, so its
+	 * "already alive" test reads the wrong ones and the cold path would write the SDM845's values into this
+	 * SoC's USB clocks and PHY. miatoll is entered through ABL's fastboot, which leaves USB powered.
+	 */
+	con_str("USBPWR", "miatoll: left as ABL has it");
+#endif
 
 	/*
 	 * Bergamota fastboot (bergamota.c): boot.img cmdline "bergamota.fastboot=1", or no payload in
