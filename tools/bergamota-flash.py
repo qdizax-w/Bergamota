@@ -42,7 +42,7 @@ import time
 from collections import deque
 from concurrent.futures import ThreadPoolExecutor
 
-ALLOWED = ("userdata", "boot", "logo")
+ALLOWED = ("userdata", "boot", "logo", "darwin")
 SERIAL = "bergamota0001"
 BLK = 4096
 HASH_BS = 65536

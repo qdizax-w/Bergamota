@@ -367,8 +367,9 @@ def ssh(root):
     binaries from tools/ssh/build.sh in research/ssh-build/out."""
     out = os.path.normpath(SSH_OUT)
     # macOS also needs the host builds (applet list, host keys); Linux needs only the iOS binaries (see toybox_applets)
-    need = [os.path.join(out, n) for n in (('dropbear', 'dash', 'toybox') if rplat.is_linux() else
-                                           ('dropbear', 'dash', 'toybox', 'dropbear-mac', 'toybox-mac'))]
+    # (the host builds are optional on both: without them the applet list is derived and the host keys are made by
+    # dropbear on the phone, `dropbear -R`)
+    need = [os.path.join(out, n) for n in ('dropbear', 'dash', 'toybox')]
     missing = [p for p in need if not os.path.isfile(p)]
     if missing:
         print('ssh: skipped, not built (run tools/ssh/build.sh):', ', '.join(os.path.basename(p) for p in missing))
@@ -798,6 +799,8 @@ def macho_has_dylib(path, dylib):
 
 def entitlements_of(path):
     out = rplat.read_entitlements(path)
+    # the signature blob is padded with NULs (codesign on macOS 12 hands them over too), which the XML parser refuses
+    out = out.rstrip(b'\0') if out else out
     return plistlib.loads(out) if out else None
 
 

@@ -18,7 +18,7 @@ static int str_eq(const char *a, const char *b)
 /* THE allowlist. Nothing else is ever written, erased or hashed. */
 int stor_name_allowed(const char *name)
 {
-	return str_eq(name, "userdata") || str_eq(name, "boot") || str_eq(name, "logo");
+	return str_eq(name, "userdata") || str_eq(name, "boot") || str_eq(name, "logo") || str_eq(name, "darwin");
 }
 
 static uint32_t le32(const uint8_t *p)
@@ -140,14 +140,14 @@ const char *stor_scan(struct stor *s)
 	if (!s->luns_found)
 		return s->scan_err = "no UFS LUN answered";
 	if (!s->nparts)
-		return s->scan_err = "no userdata/boot/logo partition in any GPT";
+		return s->scan_err = "no userdata/boot/logo/darwin partition in any GPT";
 	return 0;
 }
 
 const struct stor_part *stor_find(struct stor *s, const char *name, const char **why)
 {
 	if (!stor_name_allowed(name)) {
-		*why = "partition not allowed (only userdata, boot, logo)";
+		*why = "partition not allowed (only userdata, boot, logo, darwin)";
 		return 0;
 	}
 	if (!s->scanned)

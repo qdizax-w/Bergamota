@@ -67,7 +67,7 @@ void fb_init(struct fb *fb, const struct fb_transport *t, const struct fb_platfo
 
 int fb_part_allowed(const char *name)
 {
-	return fb_eq(name, "userdata") || fb_eq(name, "boot") || fb_eq(name, "logo");
+	return fb_eq(name, "userdata") || fb_eq(name, "boot") || fb_eq(name, "logo") || fb_eq(name, "darwin");
 }
 
 /* "OKAY" / "FAIL" / "INFO" / "DATA" + text, at most 64 bytes. */
@@ -138,7 +138,7 @@ static const char *fb_var(struct fb *fb, unsigned i, const char **name, char *bu
 	return 0;
 }
 
-#define FB_NOT_ALLOWED	"partition not allowed (only userdata, boot, logo)"
+#define FB_NOT_ALLOWED	"partition not allowed (only userdata, boot, logo, darwin)"
 
 /* partition-size:/partition-type:/has-slot:/is-logical: for the three allowed partitions */
 static void fb_getvar_part(struct fb *fb, const char *want)
@@ -693,7 +693,7 @@ enum fb_result fb_run(struct fb *fb)
 			   fb_starts(cmd, "create-logical") || fb_starts(cmd, "delete-logical") ||
 			   fb_starts(cmd, "resize-logical") || fb_starts(cmd, "update-super") ||
 			   fb_starts(cmd, "snapshot-update")) {
-			fb_resp(fb, "FAIL", "not supported: only flash/erase of userdata, boot, logo");
+			fb_resp(fb, "FAIL", "not supported: only flash/erase of userdata, boot, logo, darwin");
 		} else {
 			fb_resp(fb, "FAIL", "unknown command");
 		}
